@@ -24,9 +24,9 @@ export default function Hero() {
       </div>
       
       {/* Letter Glitch Overlay solo en Hero */}
-      <div className="absolute inset-0 w-full h-full opacity-20">
+      <div className="absolute inset-0 w-full h-full opacity-30">
         <LetterGlitch 
-          glitchSpeed={100}
+          glitchSpeed={80}
           centerVignette={true}
           outerVignette={false}
           smooth={false}

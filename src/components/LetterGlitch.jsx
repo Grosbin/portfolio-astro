@@ -15,7 +15,7 @@ const LetterGlitch = ({
   const context = useRef(null);
   const lastGlitchTime = useRef(Date.now());
   const mousePos = useRef({ x: 0, y: 0 });
-  const mouseInfluenceRadius = useRef(100); // Radio de influencia del mouse
+  const mouseInfluenceRadius = useRef(150); // Radio de influencia del mouse aumentado
 
   const fontSize = 16;
   const charWidth = 10;
@@ -34,9 +34,22 @@ const LetterGlitch = ({
     return ['#666666', '#999999', '#CCCCCC', '#FFFFFF']; // Monochromatic grays
   };
 
-  // Colors for mouse-influenced areas
+  // Colors for mouse-influenced areas - Ultra vibrant!
   const getMouseInfluenceColors = () => {
-    return ['#00FF00', '#FF0080', '#00FFFF', '#FF8000', '#8000FF', '#FFFF00']; // Vibrant colors
+    return [
+      '#00FF41', // Matrix green
+      '#FF0099', // Hot pink
+      '#00FFFF', // Electric cyan  
+      '#FF3300', // Neon red
+      '#9900FF', // Electric purple
+      '#FFFF00', // Bright yellow
+      '#FF6600', // Electric orange
+      '#00FF88', // Neon mint
+      '#FF0066', // Neon rose
+      '#66FF00', // Lime green
+      '#FF00CC', // Magenta
+      '#00CCFF'  // Sky blue
+    ]; // More vibrant colors
   };
 
   const getRandomChar = () => {
@@ -158,7 +171,7 @@ const LetterGlitch = ({
 
     // Actualizar letras en el área del mouse con colores vibrantes
     if (mouseInfluencedLetters.length > 0) {
-      const mouseUpdateCount = Math.max(1, Math.floor(mouseInfluencedLetters.length * 0.4)); // Increased rate
+      const mouseUpdateCount = Math.max(1, Math.floor(mouseInfluencedLetters.length * 0.6)); // Much higher rate
       for (let i = 0; i < mouseUpdateCount; i++) {
         const index = mouseInfluencedLetters[Math.floor(Math.random() * mouseInfluencedLetters.length)];
         if (!letters.current[index]) continue;
@@ -260,12 +273,12 @@ const LetterGlitch = ({
 
     const handleMouseEnter = () => {
       // Increase glitch intensity when mouse enters
-      mouseInfluenceRadius.current = 120;
+      mouseInfluenceRadius.current = 200;
     };
 
     const handleMouseLeave = () => {
       // Reset glitch intensity when mouse leaves
-      mouseInfluenceRadius.current = 100;
+      mouseInfluenceRadius.current = 150;
       // Reset mouse position to center to avoid edge effects
       const rect = canvas.getBoundingClientRect();
       mousePos.current.x = rect.width / 2;
