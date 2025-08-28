@@ -24,19 +24,19 @@ export default function Hero() {
       </div>
       
       {/* Letter Glitch Overlay solo en Hero */}
-      <div className="absolute inset-0 w-full h-full opacity-5 pointer-events-none">
+      <div className="absolute inset-0 w-full h-full opacity-20">
         <LetterGlitch 
-          glitchSpeed={150}
+          glitchSpeed={100}
           centerVignette={true}
           outerVignette={false}
-          smooth={true}
+          smooth={false}
         />
       </div>
       <div className="text-center z-10 max-w-4xl mx-auto">
         {/* Name and title */}
         <h1 className="text-6xl md:text-8xl font-bold mb-6 font-space">
           <SectionTitle>
-            Tu Nombre
+            Roberto Betancourth
           </SectionTitle>
         </h1>
 
