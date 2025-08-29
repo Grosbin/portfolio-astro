@@ -452,7 +452,11 @@ export default function WindowManager({ children, onTerminalCommand }) {
 
 function TerminalWindow({ terminalWindow, setTerminalWindow, terminalOutput, currentCommand, setCurrentCommand, handleKeyDown, terminalRef }) {
   const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const [resizeDirection, setResizeDirection] = useState('');
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [initialSize, setInitialSize] = useState({ width: 0, height: 0 });
+  const [initialPos, setInitialPos] = useState({ x: 0, y: 0 });
   const windowRef = useRef(null);
 
   const startDrag = (clientX, clientY) => {
@@ -613,19 +617,19 @@ function TerminalWindow({ terminalWindow, setTerminalWindow, terminalOutput, cur
       <div className="h-full overflow-hidden rounded-b-lg bg-black">
         <div ref={terminalRef} className="h-full overflow-y-auto px-4 py-2 bg-black">
           {terminalOutput.map((line, index) => (
-            <div key={index} className="text-green-400 text-sm leading-relaxed font-mono">
+            <div key={index} className="text-white text-sm leading-relaxed font-mono">
               {line}
             </div>
           ))}
-          <div className="flex items-center text-green-400 text-sm font-mono">
+          <div className="flex items-center text-white text-sm font-mono">
             <span className="text-white">roberto@terminal</span>
-            <span className="text-green-400">:~$ </span>
+            <span className="text-gray-400">:~$ </span>
             <input
               type="text"
               value={currentCommand}
               onChange={(e) => setCurrentCommand(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="bg-transparent border-none outline-none flex-1 text-green-400 ml-1 font-mono"
+              className="bg-transparent border-none outline-none flex-1 text-white ml-1 font-mono"
               placeholder=""
               autoFocus
             />
@@ -633,6 +637,39 @@ function TerminalWindow({ terminalWindow, setTerminalWindow, terminalOutput, cur
           </div>
         </div>
       </div>
+
+      {/* Resize Handles for Terminal */}
+      <div 
+        className="resize-handle absolute bottom-0 right-0 w-3 h-3 cursor-se-resize"
+        onMouseDown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const startX = e.clientX;
+          const startY = e.clientY;
+          const startWidth = terminalWindow.size.width;
+          const startHeight = terminalWindow.size.height;
+          
+          const handleResize = (moveEvent) => {
+            const newWidth = Math.max(400, startWidth + (moveEvent.clientX - startX));
+            const newHeight = Math.max(200, startHeight + (moveEvent.clientY - startY));
+            
+            setTerminalWindow(prev => ({
+              ...prev,
+              size: { width: newWidth, height: newHeight }
+            }));
+          };
+          
+          const handleMouseUp = () => {
+            document.removeEventListener('mousemove', handleResize);
+            document.removeEventListener('mouseup', handleMouseUp);
+          };
+          
+          document.addEventListener('mousemove', handleResize);
+          document.addEventListener('mouseup', handleMouseUp);
+        }}
+        style={{ transform: 'translate(6px, 6px)' }}
+      />
     </div>
   );
 }
@@ -656,11 +693,16 @@ function DesktopIcon({ icon, label, onClick }) {
 
 function Window({ window: windowData, onClose, onMinimize, onMaximize, onFocus, isFocused, setWindows }) {
   const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const [resizeDirection, setResizeDirection] = useState('');
   const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
+  const [initialSize, setInitialSize] = useState({ width: 0, height: 0 });
+  const [initialPos, setInitialPos] = useState({ x: 0, y: 0 });
   const windowRef = useRef(null);
 
   const handleMouseDown = (e) => {
     if (e.target.closest('.window-controls')) return;
+    if (e.target.closest('.resize-handle')) return;
     
     console.log('Mouse down on window:', windowData.title); // Debug
     e.preventDefault();
@@ -671,33 +713,93 @@ function Window({ window: windowData, onClose, onMinimize, onMaximize, onFocus, 
     setLastPos({ x: e.clientX, y: e.clientY });
   };
 
-  const handleMouseMove = (e) => {
-    if (!isDragging || !windowRef.current) return;
+  const handleResizeMouseDown = (e, direction) => {
+    e.preventDefault();
+    e.stopPropagation();
     
-    const deltaX = e.clientX - lastPos.x;
-    const deltaY = e.clientY - lastPos.y;
-    
-    const newX = Math.max(0, Math.min(window.innerWidth - windowData.size.width, windowData.position.x + deltaX));
-    const newY = Math.max(0, Math.min(window.innerHeight - windowData.size.height - 48, windowData.position.y + deltaY));
-    
-    console.log('Moving window to:', newX, newY); // Debug
-    
-    setWindows(prev => prev.map(w => 
-      w.id === windowData.id 
-        ? { ...w, position: { x: newX, y: newY } }
-        : w
-    ));
-    
+    onFocus();
+    setIsResizing(true);
+    setResizeDirection(direction);
     setLastPos({ x: e.clientX, y: e.clientY });
+    setInitialSize({ width: windowData.size.width, height: windowData.size.height });
+    setInitialPos({ x: windowData.position.x, y: windowData.position.y });
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging && windowRef.current) {
+      const deltaX = e.clientX - lastPos.x;
+      const deltaY = e.clientY - lastPos.y;
+      
+      const newX = Math.max(0, Math.min(window.innerWidth - windowData.size.width, windowData.position.x + deltaX));
+      const newY = Math.max(0, Math.min(window.innerHeight - windowData.size.height - 48, windowData.position.y + deltaY));
+      
+      setWindows(prev => prev.map(w => 
+        w.id === windowData.id 
+          ? { ...w, position: { x: newX, y: newY } }
+          : w
+      ));
+      
+      setLastPos({ x: e.clientX, y: e.clientY });
+    }
+
+    if (isResizing && windowRef.current) {
+      const deltaX = e.clientX - lastPos.x;
+      const deltaY = e.clientY - lastPos.y;
+      
+      let newWidth = initialSize.width;
+      let newHeight = initialSize.height;
+      let newX = initialPos.x;
+      let newY = initialPos.y;
+
+      // Calculate new dimensions based on resize direction
+      switch (resizeDirection) {
+        case 'se': // Southeast (bottom-right)
+          newWidth = Math.max(300, initialSize.width + deltaX);
+          newHeight = Math.max(200, initialSize.height + deltaY);
+          break;
+        case 'sw': // Southwest (bottom-left)
+          newWidth = Math.max(300, initialSize.width - deltaX);
+          newHeight = Math.max(200, initialSize.height + deltaY);
+          newX = initialPos.x + (initialSize.width - newWidth);
+          break;
+        case 'ne': // Northeast (top-right)
+          newWidth = Math.max(300, initialSize.width + deltaX);
+          newHeight = Math.max(200, initialSize.height - deltaY);
+          newY = initialPos.y + (initialSize.height - newHeight);
+          break;
+        case 'nw': // Northwest (top-left)
+          newWidth = Math.max(300, initialSize.width - deltaX);
+          newHeight = Math.max(200, initialSize.height - deltaY);
+          newX = initialPos.x + (initialSize.width - newWidth);
+          newY = initialPos.y + (initialSize.height - newHeight);
+          break;
+      }
+
+      // Ensure window stays within screen bounds
+      newWidth = Math.min(newWidth, window.innerWidth - newX);
+      newHeight = Math.min(newHeight, window.innerHeight - newY - 48);
+
+      setWindows(prev => prev.map(w => 
+        w.id === windowData.id 
+          ? { 
+              ...w, 
+              size: { width: newWidth, height: newHeight },
+              position: { x: newX, y: newY }
+            }
+          : w
+      ));
+    }
   };
 
   const handleMouseUp = () => {
-    console.log('Mouse up, stopping drag'); // Debug
+    console.log('Mouse up, stopping drag/resize'); // Debug
     setIsDragging(false);
+    setIsResizing(false);
+    setResizeDirection('');
   };
 
   useEffect(() => {
-    if (isDragging) {
+    if (isDragging || isResizing) {
       console.log('Adding global listeners'); // Debug
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
@@ -708,18 +810,14 @@ function Window({ window: windowData, onClose, onMinimize, onMaximize, onFocus, 
         document.removeEventListener('mouseup', handleMouseUp);
       };
     }
-  }, [isDragging, lastPos, windowData]);
+  }, [isDragging, isResizing, lastPos, windowData, initialSize, initialPos, resizeDirection]);
 
   const windowStyle = {
     transform: `translate(${windowData.position.x}px, ${windowData.position.y}px)`,
     width: `${windowData.size.width}px`,
     height: `${windowData.size.height}px`,
-    minWidth: `${windowData.size.width}px`,
-    maxWidth: `${windowData.size.width}px`,
-    minHeight: `${windowData.size.height}px`,
-    maxHeight: `${windowData.size.height}px`,
     zIndex: windowData.zIndex,
-    willChange: isDragging ? 'transform' : 'auto'
+    willChange: (isDragging || isResizing) ? 'transform' : 'auto'
   };
 
   return (
@@ -770,6 +868,28 @@ function Window({ window: windowData, onClose, onMinimize, onMaximize, onFocus, 
       <div className="p-4 h-full overflow-auto rounded-b-lg bg-white">
         <WindowContent type={windowData.type} />
       </div>
+
+      {/* Resize Handles */}
+      <div 
+        className="resize-handle absolute top-0 left-0 w-3 h-3 cursor-nw-resize"
+        onMouseDown={(e) => handleResizeMouseDown(e, 'nw')}
+        style={{ transform: 'translate(-6px, -6px)' }}
+      />
+      <div 
+        className="resize-handle absolute top-0 right-0 w-3 h-3 cursor-ne-resize"
+        onMouseDown={(e) => handleResizeMouseDown(e, 'ne')}
+        style={{ transform: 'translate(6px, -6px)' }}
+      />
+      <div 
+        className="resize-handle absolute bottom-0 left-0 w-3 h-3 cursor-sw-resize"
+        onMouseDown={(e) => handleResizeMouseDown(e, 'sw')}
+        style={{ transform: 'translate(-6px, 6px)' }}
+      />
+      <div 
+        className="resize-handle absolute bottom-0 right-0 w-3 h-3 cursor-se-resize"
+        onMouseDown={(e) => handleResizeMouseDown(e, 'se')}
+        style={{ transform: 'translate(6px, 6px)' }}
+      />
     </div>
   );
 }

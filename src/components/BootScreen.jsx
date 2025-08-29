@@ -30,7 +30,7 @@ export default function BootScreen({ onBootComplete }) {
   useEffect(() => {
     const cursorInterval = setInterval(() => {
       setShowCursor(prev => !prev);
-    }, 500);
+    }, 400);
 
     return () => clearInterval(cursorInterval);
   }, []);
@@ -38,10 +38,10 @@ export default function BootScreen({ onBootComplete }) {
   useEffect(() => {
     if (currentStep >= bootMessages.length) {
       setBootComplete(true);
-      // Auto-enter after 1 second when boot is complete
+      // Auto-enter after 0.5 second when boot is complete
       setTimeout(() => {
         onBootComplete();
-      }, 1000);
+      }, 500);
       return;
     }
 
@@ -54,21 +54,21 @@ export default function BootScreen({ onBootComplete }) {
         setCurrentMessage(message.slice(0, charIndex));
         charIndex++;
         
-        // Variable speed typing
-        const delay = message === '' ? 100 : 
-                     message.startsWith('[OK]') ? 50 :
-                     message.includes('...') ? 80 : 30;
+        // Variable speed typing - faster
+        const delay = message === '' ? 50 : 
+                     message.startsWith('[OK]') ? 25 :
+                     message.includes('...') ? 40 : 15;
         
         setTimeout(typeMessage, delay);
       } else {
-        // Message complete, move to next after delay
+        // Message complete, move to next after delay - faster
         setTimeout(() => {
           setCurrentStep(prev => prev + 1);
-        }, message.startsWith('[OK]') ? 200 : 500);
+        }, message.startsWith('[OK]') ? 100 : 250);
       }
     };
 
-    const initialDelay = currentStep === 0 ? 1000 : 100;
+    const initialDelay = currentStep === 0 ? 500 : 50;
     setTimeout(typeMessage, initialDelay);
   }, [currentStep]);
 
@@ -178,8 +178,6 @@ export default function BootScreen({ onBootComplete }) {
         <div className="w-full h-full bg-white boot-flicker"></div>
       </div>
 
-      {/* Scanning line effect */}
-      <div className="boot-scanline"></div>
     </div>
   );
 }

@@ -143,6 +143,31 @@ body {
   flex-grow: 0;
 }
 
+/* Resize handles */
+.resize-handle {
+  background: var(--terminal-black);
+  border: 1px solid var(--terminal-white);
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+.resize-handle:hover {
+  opacity: 0.8;
+}
+
+/* Show resize handles on window hover */
+.window-draggable:hover .resize-handle,
+.window-dragging:hover .resize-handle {
+  opacity: 0.6;
+}
+
+.window-draggable:hover .resize-handle:hover,
+.window-dragging:hover .resize-handle:hover {
+  opacity: 1;
+}
+
 .terminal-titlebar {
   background: var(--terminal-light-gray);
   border-bottom: 1px solid var(--terminal-black);
