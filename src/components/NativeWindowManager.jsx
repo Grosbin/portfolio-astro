@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import BootScreen from './BootScreen.jsx';
+import DarkVeil from './DarkVeil.jsx';
 
 // Native browser window management system
 export default function NativeWindowManager({ children, onTerminalCommand }) {
@@ -878,21 +879,25 @@ export default function NativeWindowManager({ children, onTerminalCommand }) {
   }
 
   return (
-    <div className="fixed inset-0 w-screen h-screen font-mono text-black overflow-hidden" style={{ margin: 0, padding: 0, background: 'linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 25%, #f5f5f5 50%, #e8e8e8 75%, #f0f0f0 100%)' }}>
-      {/* Desktop Wallpaper Pattern */}
-      <div 
-        className="absolute inset-0 w-screen h-screen opacity-10" 
-        style={{
-          backgroundImage: `
-            radial-gradient(circle at 25% 25%, #000000 2px, transparent 2px),
-            radial-gradient(circle at 75% 75%, #000000 1px, transparent 1px)
-          `,
-          backgroundSize: '50px 50px, 25px 25px'
-        }}
-      />
+    <div className="fixed inset-0 w-screen h-screen font-mono text-black overflow-hidden" style={{ margin: 0, padding: 0 }}>
+      {/* DarkVeil Background */}
+      <div className="absolute inset-0 w-screen h-screen" style={{ zIndex: 1 }}>
+        <DarkVeil
+          hueShift={0}
+          noiseIntensity={0.05}
+          scanlineIntensity={0.1}
+          speed={0.5}
+          scanlineFrequency={1.0}
+          warpAmount={0.3}
+          resolutionScale={1.0}
+        />
+      </div>
+      
+      {/* Overlay for better readability - reduced opacity to show DarkVeil */}
+      <div className="absolute inset-0 bg-black bg-opacity-5" style={{ zIndex: 2 }} />
       
       {/* Desktop Background */}
-      <div className="relative w-screen h-screen" style={{ margin: 0, padding: 0 }}>
+      <div className="relative w-screen h-screen" style={{ margin: 0, padding: 0, zIndex: 10 }}>
         
         {/* Desktop Icons */}
         <div className="absolute top-6 left-6 grid gap-6 z-30 mobile-icons md:grid-cols-1">
