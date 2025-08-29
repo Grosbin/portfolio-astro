@@ -78,19 +78,19 @@ export default function BootScreen({ onBootComplete }) {
       {/* Boot Screen Content */}
       <div className="h-full flex flex-col">
         {/* Header */}
-        <div className="flex-shrink-0 border-b border-gray-400 p-4">
+        <div className="flex-shrink-0 border-b border-gray-400 p-2 md:p-4">
           <div className="text-center">
-            <div className="text-white text-lg font-bold">ROBERTO PORTFOLIO OS</div>
-            <div className="text-gray-300 text-sm">Terminal Mode Activated</div>
+            <div className="text-white text-sm md:text-lg font-bold">ROBERTO PORTFOLIO OS</div>
+            <div className="text-gray-300 text-xs md:text-sm">Terminal Mode Activated</div>
           </div>
         </div>
 
         {/* Boot Messages */}
-        <div className="flex-1 p-6 overflow-hidden">
+        <div className="flex-1 p-3 md:p-6 overflow-hidden">
           <div className="space-y-1">
             {/* Previous messages */}
             {bootMessages.slice(0, currentStep).map((message, index) => (
-              <div key={index} className="text-sm leading-relaxed">
+              <div key={index} className="text-xs md:text-sm leading-relaxed">
                 {message === '' ? '\u00A0' : (
                   <span className={
                     message.startsWith('[OK]') ? 'text-gray-300' :
@@ -106,7 +106,7 @@ export default function BootScreen({ onBootComplete }) {
             
             {/* Current typing message */}
             {currentStep < bootMessages.length && (
-              <div className="text-sm leading-relaxed">
+              <div className="text-xs md:text-sm leading-relaxed">
                 <span className={
                   currentMessage.startsWith('[OK]') ? 'text-gray-300' :
                   currentMessage.includes('Copyright') ? 'text-gray-400' :
@@ -124,12 +124,12 @@ export default function BootScreen({ onBootComplete }) {
         </div>
 
         {/* Footer */}
-        <div className="flex-shrink-0 border-t border-gray-400 p-4">
-          <div className="flex justify-between items-center text-xs text-gray-400">
+        <div className="flex-shrink-0 border-t border-gray-400 p-2 md:p-4">
+          <div className="flex flex-col md:flex-row justify-between items-center text-xs text-gray-400 space-y-2 md:space-y-0">
             <div>System Status: {bootComplete ? 'READY' : 'BOOTING...'}</div>
-            <div className="flex items-center space-x-4">
-              <div>Memory: 8GB</div>
-              <div>CPU: Portfolio Engine v2.0</div>
+            <div className="flex items-center space-x-2 md:space-x-4 text-xs">
+              <div className="hidden md:block">Memory: 8GB</div>
+              <div className="hidden sm:block">CPU: Portfolio Engine v2.0</div>
               <div className="flex items-center">
                 <div className={`w-2 h-2 rounded-full mr-2 ${bootComplete ? 'bg-white animate-pulse' : 'bg-gray-500 animate-pulse'}`}></div>
                 {bootComplete ? 'READY' : 'LOADING'}
@@ -141,7 +141,7 @@ export default function BootScreen({ onBootComplete }) {
 
       {/* Loading progress bar */}
       {!bootComplete && (
-        <div className="absolute bottom-16 left-6 right-6">
+        <div className="absolute bottom-12 md:bottom-16 left-3 right-3 md:left-6 md:right-6">
           <div className="border border-gray-400 rounded p-2">
             <div className="text-xs text-gray-400 mb-2">Boot Progress:</div>
             <div className="w-full bg-black border border-gray-500 rounded overflow-hidden">
@@ -159,8 +159,8 @@ export default function BootScreen({ onBootComplete }) {
 
       {/* System ready indicator */}
       {bootComplete && (
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-          <div className="text-white text-sm animate-pulse">
+        <div className="absolute bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 px-2">
+          <div className="text-white text-xs md:text-sm animate-pulse text-center">
             ⚡ System Ready - Entering Portfolio... ⚡
           </div>
         </div>

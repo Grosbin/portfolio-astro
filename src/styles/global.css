@@ -122,6 +122,8 @@ body {
   resize: none !important;
   flex-shrink: 0;
   flex-grow: 0;
+  touch-action: none;
+  -webkit-user-drag: none;
 }
 
 .window-draggable {
@@ -133,6 +135,8 @@ body {
   resize: none !important;
   flex-shrink: 0;
   flex-grow: 0;
+  touch-action: manipulation;
+  -webkit-user-drag: none;
 }
 
 /* Prevent any accidental resizing */
@@ -305,54 +309,128 @@ body {
     font-size: 12px;
     -webkit-user-select: none;
     -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
   
   .terminal-window {
     border-radius: 4px;
     min-width: 280px;
-    max-width: 90vw;
+    max-width: 95vw;
+    min-height: 200px;
   }
   
   .terminal-button {
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+    min-height: 14px;
   }
   
   /* Mobile terminal adjustments */
   .mobile-terminal {
-    height: 40vh !important;
+    height: 35vh !important;
     font-size: 11px;
+    max-height: 300px;
   }
   
-  /* Mobile desktop icons */
+  /* Mobile desktop icons - responsive grid */
   .mobile-icons {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    top: 1rem;
-    left: 1rem;
-    right: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    top: 0.75rem;
+    left: 0.75rem;
+    right: 0.75rem;
   }
   
   /* Mobile welcome screen */
   .mobile-welcome {
-    max-width: 90vw;
+    max-width: 95vw;
     padding: 1rem;
     font-size: 12px;
+    margin: 1rem;
   }
   
   /* Touch-friendly buttons */
   .mobile-button {
-    min-height: 44px;
-    min-width: 44px;
+    min-height: 48px;
+    min-width: 48px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Better touch targets for window controls */
+  .window-controls button {
+    min-width: 24px;
+    min-height: 24px;
+    margin: 2px;
+  }
+  
+  /* Prevent text selection on touch */
+  .window-draggable,
+  .window-dragging {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+  
+  /* Mobile-specific window styles */
+  .mobile-window {
+    width: 95vw !important;
+    height: 70vh !important;
+    max-height: 500px;
+    top: 10px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
   }
 }
 
 @media (max-width: 480px) {
+  body {
+    font-size: 11px;
+  }
+  
   .mobile-icons {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    top: 0.5rem;
+    left: 0.5rem;
+    right: 0.5rem;
   }
   
   .mobile-terminal {
-    height: 35vh !important;
+    height: 30vh !important;
+    min-height: 150px;
+    font-size: 10px;
+  }
+  
+  .mobile-welcome {
+    max-width: 98vw;
+    padding: 0.75rem;
+    font-size: 11px;
+    margin: 0.5rem;
+  }
+  
+  /* Very small screens - stack buttons vertically */
+  .mobile-button-stack {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .mobile-button-stack button {
+    width: 100%;
+  }
+  
+  /* Compact taskbar for very small screens */
+  .taskbar-compact {
+    height: 56px;
+    padding: 0.25rem;
+  }
+  
+  .taskbar-compact button {
+    font-size: 10px;
+    padding: 0.25rem 0.5rem;
   }
 }

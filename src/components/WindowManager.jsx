@@ -16,6 +16,7 @@ export default function WindowManager({ children, onTerminalCommand }) {
   const [showWelcome, setShowWelcome] = useState(true);
   const [contextMenu, setContextMenu] = useState({ show: false, x: 0, y: 0 });
   const [showBootScreen, setShowBootScreen] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const [terminalWindow, setTerminalWindow] = useState({
     position: { x: 0, y: 0 },
     size: { width: 800, height: 300 },
@@ -106,21 +107,28 @@ export default function WindowManager({ children, onTerminalCommand }) {
 
   const openWindow = (type, initialPosition = null) => {
     const id = `${type}_${Date.now()}`;
+    const isMobileDevice = window.innerWidth < 768;
+    
     const defaultPositions = {
-      about: { x: 100, y: 100 },
-      projects: { x: 150, y: 150 }, 
-      experience: { x: 200, y: 200 },
-      contact: { x: 250, y: 250 }
+      about: { x: isMobileDevice ? 10 : 100, y: isMobileDevice ? 10 : 100 },
+      projects: { x: isMobileDevice ? 10 : 150, y: isMobileDevice ? 10 : 150 }, 
+      experience: { x: isMobileDevice ? 10 : 200, y: isMobileDevice ? 10 : 200 },
+      contact: { x: isMobileDevice ? 10 : 250, y: isMobileDevice ? 10 : 250 }
+    };
+
+    const windowSize = {
+      width: isMobileDevice ? Math.min(window.innerWidth - 20, 350) : 600,
+      height: isMobileDevice ? Math.min(window.innerHeight - 120, 400) : 400
     };
 
     const newWindow = {
       id,
       type,
       title: type.charAt(0).toUpperCase() + type.slice(1),
-      position: initialPosition || defaultPositions[type] || { x: 100, y: 100 },
-      size: { width: 600, height: 400 },
+      position: initialPosition || defaultPositions[type] || { x: isMobileDevice ? 10 : 100, y: isMobileDevice ? 10 : 100 },
+      size: windowSize,
       isMinimized: false,
-      isMaximized: false,
+      isMaximized: isMobileDevice, // Auto-maximize on mobile
       zIndex: nextZIndex
     };
 
