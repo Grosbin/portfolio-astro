@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import BootScreen from './BootScreen.jsx';
 
 export default function WindowManager({ children, onTerminalCommand }) {
   const [windows, setWindows] = useState([]);
@@ -14,6 +15,7 @@ export default function WindowManager({ children, onTerminalCommand }) {
   const [currentCommand, setCurrentCommand] = useState('');
   const [showWelcome, setShowWelcome] = useState(true);
   const [contextMenu, setContextMenu] = useState({ show: false, x: 0, y: 0 });
+  const [showBootScreen, setShowBootScreen] = useState(true);
   const [terminalWindow, setTerminalWindow] = useState({
     position: { x: 0, y: 0 },
     size: { width: 800, height: 300 },
@@ -217,6 +219,15 @@ export default function WindowManager({ children, onTerminalCommand }) {
       document.removeEventListener('click', handleClick);
     };
   }, []);
+
+  const handleBootComplete = () => {
+    setShowBootScreen(false);
+  };
+
+  // Show boot screen first
+  if (showBootScreen) {
+    return <BootScreen onBootComplete={handleBootComplete} />;
+  }
 
   return (
     <div className="fixed inset-0 w-screen h-screen font-mono text-black overflow-hidden" style={{ margin: 0, padding: 0, background: 'linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 25%, #f5f5f5 50%, #e8e8e8 75%, #f0f0f0 100%)' }}>

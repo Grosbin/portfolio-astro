@@ -235,6 +235,45 @@ body {
   }
 }
 
+/* Boot screen animations */
+@keyframes boot-flicker {
+  0%, 98% { opacity: 0; }
+  99%, 100% { opacity: 0.02; }
+}
+
+@keyframes boot-scanline {
+  0% { transform: translateY(-100vh); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes boot-text-glow {
+  0%, 100% { text-shadow: 0 0 5px currentColor; }
+  50% { text-shadow: 0 0 10px currentColor, 0 0 15px currentColor; }
+}
+
+.boot-screen {
+  background: radial-gradient(ellipse at center, #111111 0%, #000000 70%);
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+.boot-text {
+  animation: boot-text-glow 2s ease-in-out infinite;
+}
+
+.boot-flicker {
+  animation: boot-flicker 0.15s infinite alternate;
+}
+
+.boot-scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+  animation: boot-scanline 2s linear infinite;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   body {
