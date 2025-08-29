@@ -14,50 +14,46 @@ const LetterGlitch = ({
   const grid = useRef({ columns: 0, rows: 0 });
   const context = useRef(null);
   const lastGlitchTime = useRef(Date.now());
-  const mousePos = useRef({ x: 0, y: 0 });
-  const mouseInfluenceRadius = useRef(150); // Radio de influencia del mouse aumentado
 
-  const fontSize = 16;
-  const charWidth = 10;
-  const charHeight = 20;
+  const fontSize = 14;
+  const charWidth = 8;
+  const charHeight = 16;
 
   const lettersAndSymbols = [
+    // Clean minimalist characters - terminal style
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
     'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-    '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '+', '=', '/',
-    '[', ']', '{', '}', ';', ':', '<', '>', ',', '0', '1', '2', '3',
-    '4', '5', '6', '7', '8', '9'
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    // Terminal symbols
+    '/', '\\', '|', '-', '_', '+', '=', ':', ';', '.', ',',
+    '[', ']', '{', '}', '(', ')', '<', '>',
+    // More binary for subtle matrix effect
+    '0', '1', '0', '1', '0', '1'
   ];
 
-  // Fixed dark theme colors
-  const getThemeColors = () => {
-    return ['#666666', '#999999', '#CCCCCC', '#FFFFFF']; // Monochromatic grays
-  };
-
-  // Colors for mouse-influenced areas - Ultra vibrant!
-  const getMouseInfluenceColors = () => {
+  // Enhanced colors for better visibility and occasional color variety
+  const getLetterColors = () => {
     return [
+      // Main elegant grays (most common)
+      '#666666', '#777777', '#888888', '#999999', '#AAAAAA', '#BBBBBB',
+      '#666666', '#777777', '#888888', '#999999', '#AAAAAA', '#BBBBBB',
+      '#666666', '#777777', '#888888', '#999999', '#AAAAAA', '#BBBBBB',
+      // Occasional accent colors for variety
       '#00FF41', // Matrix green
-      '#FF0099', // Hot pink
-      '#00FFFF', // Electric cyan  
-      '#FF3300', // Neon red
-      '#9900FF', // Electric purple
-      '#FFFF00', // Bright yellow
-      '#FF6600', // Electric orange
-      '#00FF88', // Neon mint
-      '#FF0066', // Neon rose
-      '#66FF00', // Lime green
-      '#FF00CC', // Magenta
-      '#00CCFF'  // Sky blue
-    ]; // More vibrant colors
+      '#00FFFF', // Cyan  
+      '#FF6600', // Orange
+      '#9900FF', // Purple
+      '#FF0099', // Magenta
+      '#FFFFFF', // Pure white
+    ];
   };
 
   const getRandomChar = () => {
     return lettersAndSymbols[Math.floor(Math.random() * lettersAndSymbols.length)];
   };
 
-  const getRandomColor = (isMouseInfluenced = false) => {
-    const colors = isMouseInfluenced ? getMouseInfluenceColors() : getThemeColors();
+  const getRandomColor = () => {
+    const colors = getLetterColors();
     return colors[Math.floor(Math.random() * colors.length)];
   };
 
@@ -95,8 +91,8 @@ const LetterGlitch = ({
     const totalLetters = columns * rows;
     letters.current = Array.from({ length: totalLetters }, () => ({
       char: getRandomChar(),
-      color: getRandomColor(false), // Initialize with normal colors
-      targetColor: getRandomColor(false),
+      color: getRandomColor(),
+      targetColor: getRandomColor(),
       colorProgress: 1,
     }));
   };
@@ -129,19 +125,26 @@ const LetterGlitch = ({
   const drawLetters = () => {
     if (!context.current || letters.current.length === 0) return;
     const ctx = context.current;
-    const { width, height } = canvasRef.current.getBoundingClientRect();
+    const canvas = canvasRef.current;
+    if (!canvas) return;
     
     // Clear with dark background
     ctx.fillStyle = '#000000';
-    ctx.fillRect(0, 0, width, height);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    ctx.font = `${fontSize}px monospace`;
+    ctx.font = `${fontSize}px 'JetBrains Mono', monospace`;
     ctx.textBaseline = 'top';
 
+    // Batch similar colors for better performance
+    let currentColor = '';
     letters.current.forEach((letter, index) => {
+      if (letter.color !== currentColor) {
+        ctx.fillStyle = letter.color;
+        currentColor = letter.color;
+      }
+      
       const x = (index % grid.current.columns) * charWidth;
       const y = Math.floor(index / grid.current.columns) * charHeight;
-      ctx.fillStyle = letter.color;
       ctx.fillText(letter.char, x, y);
     });
   };
@@ -149,66 +152,26 @@ const LetterGlitch = ({
   const updateLetters = () => {
     if (!letters.current || letters.current.length === 0) return;
 
-    const baseUpdateCount = Math.max(1, Math.floor(letters.current.length * 0.05));
+    // Enhanced update frequency for better visibility
+    const updateCount = Math.max(5, Math.floor(letters.current.length * 0.04));
     
-    // Separar letras por proximidad al mouse
-    const mouseInfluencedLetters = [];
-    const normalLetters = [];
+    for (let i = 0; i < updateCount; i++) {
+      const index = Math.floor(Math.random() * letters.current.length);
+      if (!letters.current[index]) continue;
 
-    letters.current.forEach((letter, index) => {
-      const x = (index % grid.current.columns) * charWidth;
-      const y = Math.floor(index / grid.current.columns) * charHeight;
-      const distance = Math.sqrt(
-        Math.pow(x - mousePos.current.x, 2) + Math.pow(y - mousePos.current.y, 2)
-      );
-
-      if (distance <= mouseInfluenceRadius.current) {
-        mouseInfluencedLetters.push(index);
-      } else {
-        normalLetters.push(index);
-      }
-    });
-
-    // Actualizar letras en el área del mouse con colores vibrantes
-    if (mouseInfluencedLetters.length > 0) {
-      const mouseUpdateCount = Math.max(1, Math.floor(mouseInfluencedLetters.length * 0.6)); // Much higher rate
-      for (let i = 0; i < mouseUpdateCount; i++) {
-        const index = mouseInfluencedLetters[Math.floor(Math.random() * mouseInfluencedLetters.length)];
-        if (!letters.current[index]) continue;
-
-        letters.current[index].char = getRandomChar();
-        letters.current[index].targetColor = getRandomColor(true);
-        
-        // Force immediate color change for better visibility
-        letters.current[index].color = letters.current[index].targetColor;
-        letters.current[index].colorProgress = 1;
-      }
-    }
-
-    // Actualizar letras normales
-    if (normalLetters.length > 0) {
-      for (let i = 0; i < baseUpdateCount; i++) {
-        const index = normalLetters[Math.floor(Math.random() * normalLetters.length)];
-        if (!letters.current[index]) continue;
-
-        letters.current[index].char = getRandomChar();
-        letters.current[index].targetColor = getRandomColor(false);
-
-        if (!smooth) {
-          letters.current[index].color = letters.current[index].targetColor;
-          letters.current[index].colorProgress = 1;
-        } else {
-          letters.current[index].colorProgress = 0;
-        }
-      }
+      letters.current[index].char = getRandomChar();
+      letters.current[index].targetColor = getRandomColor();
+      letters.current[index].colorProgress = 0; // Enable smooth transition
     }
   };
 
   const handleSmoothTransitions = () => {
     let needsRedraw = false;
-    letters.current.forEach((letter) => {
+    letters.current.forEach((letter, index) => {
       if (letter.colorProgress < 1) {
-        letter.colorProgress += 0.05;
+        const transitionSpeed = 0.1; // Consistent smooth transition speed
+        
+        letter.colorProgress += transitionSpeed;
         if (letter.colorProgress > 1) letter.colorProgress = 1;
 
         const startRgb = hexToRgb(letter.color);
@@ -227,14 +190,19 @@ const LetterGlitch = ({
 
   const animate = () => {
     const now = Date.now();
-    if (now - lastGlitchTime.current >= glitchSpeed) {
-      updateLetters();
-      drawLetters();
-      lastGlitchTime.current = now;
-    }
-
+    
+    // Always handle smooth transitions for fluid animation
     if (smooth) {
       handleSmoothTransitions();
+    }
+
+    // Update letters at the specified speed
+    if (now - lastGlitchTime.current >= glitchSpeed) {
+      updateLetters();
+      if (!smooth) {
+        drawLetters();
+      }
+      lastGlitchTime.current = now;
     }
 
     animationRef.current = requestAnimationFrame(animate);
@@ -245,11 +213,6 @@ const LetterGlitch = ({
     if (!canvas) return;
 
     context.current = canvas.getContext('2d');
-    
-    // Initialize mouse position to center
-    const rect = canvas.getBoundingClientRect();
-    mousePos.current.x = rect.width / 2;
-    mousePos.current.y = rect.height / 2;
     
     resizeCanvas();
     animate();
@@ -265,37 +228,11 @@ const LetterGlitch = ({
       }, 100);
     };
 
-    const handleMouseMove = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      mousePos.current.x = e.clientX - rect.left;
-      mousePos.current.y = e.clientY - rect.top;
-    };
-
-    const handleMouseEnter = () => {
-      // Increase glitch intensity when mouse enters
-      mouseInfluenceRadius.current = 200;
-    };
-
-    const handleMouseLeave = () => {
-      // Reset glitch intensity when mouse leaves
-      mouseInfluenceRadius.current = 150;
-      // Reset mouse position to center to avoid edge effects
-      const rect = canvas.getBoundingClientRect();
-      mousePos.current.x = rect.width / 2;
-      mousePos.current.y = rect.height / 2;
-    };
-
     window.addEventListener('resize', handleResize);
-    canvas.addEventListener('mousemove', handleMouseMove);
-    canvas.addEventListener('mouseenter', handleMouseEnter);
-    canvas.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
       cancelAnimationFrame(animationRef.current);
       window.removeEventListener('resize', handleResize);
-      canvas.removeEventListener('mousemove', handleMouseMove);
-      canvas.removeEventListener('mouseenter', handleMouseEnter);
-      canvas.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, [glitchSpeed, smooth]);
 

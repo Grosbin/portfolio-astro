@@ -11,18 +11,18 @@ const {
 ---
 
 <!doctype html>
-<html lang="es" class="scroll-smooth">
+<html lang="es" style="margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden;">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		
 		<!-- SEO -->
 		<title>{title}</title>
 		<meta name="description" content={description} />
-		<meta name="author" content="Tu Nombre" />
-		<meta name="keywords" content="desarrollador móvil, ciberseguridad, iOS, Android, penetration testing, ingeniería de sistemas" />
+		<meta name="author" content="Roberto Betancourth" />
+		<meta name="keywords" content="desarrollador móvil, ciberseguridad, iOS, Android, penetration testing, terminal portfolio" />
 		
 		<!-- Open Graph -->
 		<meta property="og:title" content={title} />
@@ -36,9 +36,9 @@ const {
 		<meta name="twitter:description" content={description} />
 		
 		<!-- Theme color -->
-		<meta name="theme-color" content="#000000" />
-		<meta name="msapplication-navbutton-color" content="#000000" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<meta name="theme-color" content="#ffffff" />
+		<meta name="msapplication-navbutton-color" content="#ffffff" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="default" />
 		
 		<!-- Fonts -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -46,11 +46,26 @@ const {
 		
 		<!-- Global styles -->
 		<link rel="stylesheet" href="/src/styles/global.css" />
+		
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+			
+			html, body {
+				width: 100vw !important;
+				height: 100vh !important;
+				overflow: hidden !important;
+				position: fixed !important;
+				top: 0 !important;
+				left: 0 !important;
+			}
+		</style>
 	</head>
 	<body>
-		<main>
-			<slot />
-		</main>
+		<slot />
 		
 		<!-- Theme initialization script -->
 		<script>

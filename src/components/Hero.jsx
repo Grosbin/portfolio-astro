@@ -1,103 +1,91 @@
-import Galaxy from './Galaxy.jsx';
 import LetterGlitch from './LetterGlitch.jsx';
 import SectionTitle from './SectionTitle.jsx';
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-6">
-      {/* Galaxy Background solo en Hero */}
-      <div className="absolute inset-0">
-        <Galaxy 
-          mouseRepulsion={false}
-          mouseInteraction={true}
-          density={3}
-          glowIntensity={0.2}
-          saturation={0.0}
-          hueShift={0}
-          twinkleIntensity={0.15}
-          rotationSpeed={0.002}
-          repulsionStrength={2}
-          speed={0.1}
-          starSpeed={0.1}
-          transparent={true}
-        />
-      </div>
-      
-      {/* Letter Glitch Overlay solo en Hero */}
-      <div className="absolute inset-0 w-full h-full opacity-30">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-elegant-black">
+      {/* Interactive Letter Glitch Background */}
+      <div className="absolute inset-0 w-full h-full opacity-25">
         <LetterGlitch 
-          glitchSpeed={80}
-          centerVignette={true}
+          glitchSpeed={100}
+          centerVignette={false}
           outerVignette={false}
-          smooth={false}
+          smooth={true}
         />
       </div>
-      <div className="text-center z-10 max-w-4xl mx-auto">
+      {/* Main Content */}
+      <div className="text-center z-20 max-w-4xl mx-auto px-6 fade-in">
         {/* Name and title */}
-        <h1 className="text-6xl md:text-8xl font-bold mb-6 font-space">
-          <SectionTitle>
+        <div className="mb-12 fade-up">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-light font-serif text-elegant-white mb-6 tracking-tight">
             Roberto Betancourth
-          </SectionTitle>
-        </h1>
+          </h1>
+          
+          <div className="h-px w-24 mx-auto bg-elegant-gray-400 mb-8"></div>
+          
+          <div className="space-y-2 text-elegant-gray-400">
+            <p className="text-xl md:text-2xl font-light">
+              Desarrollador Móvil
+            </p>
+            <p className="text-lg md:text-xl">
+              Especialista en Ciberseguridad
+            </p>
+          </div>
+        </div>
 
-        <h2 className="text-2xl md:text-4xl font-light mb-8 text-gray-300 font-mono">
-          Desarrollador Móvil • Ingeniero en Sistemas
-          <br />
-          <span className="text-xl md:text-2xl">Especialista en Ciberseguridad</span>
-        </h2>
+        {/* Elegant description */}
+        <div className="mb-12 max-w-2xl mx-auto fade-up">
+          <p className="text-lg md:text-xl text-elegant-gray-300 leading-relaxed font-light">
+            Construyendo soluciones digitales seguras con enfoque en la excelencia técnica 
+            y la innovación responsable.
+          </p>
+        </div>
 
-        {/* Tagline */}
-        <p className="text-lg md:text-xl mb-12 text-gray-400 max-w-2xl mx-auto leading-relaxed">
-          Navegando por las vastas fronteras del ciberespacio, 
-          construyendo soluciones seguras y defendiendo sistemas 
-          contra amenazas digitales.
-        </p>
-
-        {/* CTA Button */}
-        <div>
+        {/* Elegant CTA Buttons */}
+        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16 scale-in">
           <button 
-            className="group relative px-8 py-4 text-lg font-medium rounded-lg border-2 border-white/25 bg-white/5 transition-all duration-300 overflow-hidden glow-effect hover:scale-105"
+            className="group px-8 py-4 border border-elegant-gray-600 hover:border-elegant-white transition-all duration-300 subtle-glow"
             onClick={() => {
               document.getElementById('about')?.scrollIntoView({ 
                 behavior: 'smooth' 
               });
             }}
           >
-            <span className="relative z-10">Iniciar Exploración</span>
-            
-            {/* Scanline effect */}
-            <div 
-              className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"
-              style={{
-                background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)'
-              }}
-            />
+            <span className="text-elegant-white group-hover:text-elegant-white font-light">
+              Conocer Más
+            </span>
           </button>
-        </div>
 
-        {/* Terminal-style indicator */}
-        <div className="mt-16 text-center">
-          <div className="inline-flex items-center gap-2 text-sm font-mono opacity-60">
-            <div className="w-2 h-2 rounded-full animate-pulse bg-white" />
-            <span>SISTEMA OPERATIVO</span>
-            <div className="w-2 h-2 rounded-full animate-pulse bg-white" />
-          </div>
+          <button 
+            className="group px-8 py-4 bg-elegant-white text-elegant-black hover:bg-elegant-gray-100 transition-all duration-300 subtle-glow"
+            onClick={() => {
+              document.getElementById('projects')?.scrollIntoView({ 
+                behavior: 'smooth' 
+              });
+            }}
+          >
+            <span className="font-medium">
+              Ver Proyectos
+            </span>
+          </button>
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-        <div className="flex flex-col items-center gap-2 animate-bounce">
-          <span className="text-sm font-mono opacity-60">SCROLL</span>
-          <svg 
-            className="w-6 h-6 opacity-60" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
+      {/* Minimal scroll indicator */}
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 slide-in">
+        <div className="text-center">
+          <div className="w-px h-12 bg-elegant-gray-600 mx-auto mb-4"></div>
+          <div className="animate-bounce">
+            <svg 
+              className="w-5 h-5 text-elegant-gray-600" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </div>
         </div>
       </div>
     </section>
