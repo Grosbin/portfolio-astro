@@ -7,22 +7,24 @@ export default function BootScreen({ onBootComplete }) {
   const [bootComplete, setBootComplete] = useState(false);
 
   const bootMessages = [
-    'Roberto Portfolio OS v1.0.0',
+    'Roberto Betancourth OS v2.0.0',
     'Copyright (c) 2025 Roberto Betancourth. All rights reserved.',
     '',
-    'Initializing system components...',
+    'Initializing SOC Analysis System...',
     '[OK] Loading terminal interface',
-    '[OK] Mounting portfolio filesystem',
+    '[OK] Mounting portfolio filesystem', 
     '[OK] Starting window manager',
     '[OK] Loading desktop environment',
-    '[OK] Initializing network services',
-    '[OK] Loading project database',
-    '[OK] Starting security modules',
-    '[OK] Mounting experience logs',
-    '[OK] Loading contact services',
+    '[OK] Initializing security modules',
+    '[OK] Loading vulnerability scanner',
+    '[OK] Starting SIEM correlation engine',
+    '[OK] Mounting experience database',
+    '[OK] Loading project repositories',
+    '[OK] Initializing contact protocols',
     '',
     'System ready.',
-    'Welcome to Roberto Portfolio Terminal OS!',
+    'Welcome to Roberto Betancourth SOC Terminal!',
+    'Ingeniero en Sistemas | SOC Analyst | Mobile Developer',
     '',
     'Press any key to continue...'
   ];

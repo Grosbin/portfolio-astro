@@ -6,7 +6,8 @@ export default function WindowManager({ children, onTerminalCommand }) {
   const [focusedWindow, setFocusedWindow] = useState(null);
   const [nextZIndex, setNextZIndex] = useState(100);
   const [terminalOutput, setTerminalOutput] = useState([
-    'Portfolio Terminal v1.0.0',
+    'Roberto Betancourth Terminal OS v1.0.0',
+    'Ingeniero en Sistemas | SOC Analyst | Mobile Developer',
     'Type "help" for available commands',
     ''
   ]);
@@ -35,6 +36,8 @@ export default function WindowManager({ children, onTerminalCommand }) {
       '  open contact    - Open Contact section',
       '  cat about.txt   - Show About content',
       '  whoami          - Show user info',
+      '  contact         - Show contact information',
+      '  location        - Show current location',
       '  clear           - Clear terminal',
       '  pwd             - Show current directory',
       ''
@@ -52,7 +55,16 @@ export default function WindowManager({ children, onTerminalCommand }) {
       }
       return ['about.txt  projects/  experience/  contact.txt', ''];
     },
-    whoami: () => ['Roberto Betancourth - Mobile Developer & Cybersecurity Specialist', ''],
+    whoami: () => ['Roberto Betancourth - Ingeniero en Sistemas | SOC Analyst', ''],
+    location: () => ['Tegucigalpa, Honduras', ''],
+    contact: () => [
+      'Email: robertobetancourth96@gmail.com',
+      'Phone: +504 88421892', 
+      'LinkedIn: linkedin.com/in/roberto-betancourth',
+      'GitHub: github.com/Grosbin',
+      'Website: robertobetancourth.azurewebsites.net',
+      ''
+    ],
     pwd: () => ['/home/roberto/portfolio', ''],
     clear: () => {
       setTerminalOutput([]);
@@ -64,9 +76,18 @@ export default function WindowManager({ children, onTerminalCommand }) {
           'Roberto Betancourth',
           '==================',
           '',
-          'Mobile Developer & Cybersecurity Specialist',
-          'Passionate about building secure digital solutions',
-          'with focus on technical excellence and responsible innovation.',
+          'Ingeniero en Sistemas | SOC Analyst | Mobile Developer',
+          'Especialista en Ciberseguridad con experiencia en análisis de',
+          'vulnerabilidades, gestión de incidentes y desarrollo seguro.',
+          '',
+          'Educación:',
+          '• Ingeniería en Sistemas - UNAH (2019-2023)',
+          '• SOC/CTIS - IRSII Institute (2025)',
+          '',
+          'Certificaciones:',
+          '• ISC2 - CC Certified in Cybersecurity',
+          '• CISCO CCNA - Enterprise Networking & Security',
+          '• CISCO Cybersecurity Analyst Career Path',
           ''
         ];
       }
@@ -905,82 +926,120 @@ function Window({ window: windowData, onClose, onMinimize, onMaximize, onFocus, 
 function WindowContent({ type }) {
   const content = {
     about: {
-      title: 'About Me',
+      title: 'Sobre Mí',
       content: `Roberto Betancourth
       
-Mobile Developer & Cybersecurity Specialist
+Ingeniero en Sistemas | SOC Analyst | Mobile Developer
 
-Passionate about building secure digital solutions with focus on technical excellence and responsible innovation. 
+¡Hola! Me llamo Roberto Betancourth y estoy apasionado por el desarrollo 
+y la ciberseguridad. Me considero una persona orientada a la solución 
+con mentalidad de aprendizaje continuo.
 
-I specialize in creating robust mobile applications while ensuring the highest security standards throughout the development lifecycle.
+Experiencia en desarrollo de sistemas de reconocimiento facial y huella 
+dactilar para fortalecer la seguridad de cuentas de usuario.
 
-Skills:
-• Mobile Development (iOS/Android)
-• Cybersecurity & Penetration Testing
-• Secure Code Review
-• Risk Assessment & Mitigation
-• System Architecture Design`
+Especializado en:
+• Análisis de Vulnerabilidades y Gestión de Incidentes SOC
+• Desarrollo Móvil Multiplataforma (React Native, Flutter)
+• Análisis de Seguridad con Nmap, Wireshark, Burp Suite
+• Implementación de autenticación biométrica
+• Monitoreo y logging de seguridad
+• Gestión de vulnerabilidades
+
+Educación:
+• Ingeniería en Sistemas - UNAH (2019-2023)
+• SOC/CTIS - IRSII Institute (2025)
+
+Ubicación: Tegucigalpa, Honduras`
     },
     projects: {
-      title: 'Projects',
-      content: `Recent Projects
+      title: 'Proyectos',
+      content: `Proyectos Destacados
       
-1. SecureChat Mobile App
-   - End-to-end encrypted messaging
-   - React Native & Node.js
-   - Advanced security protocols
+1. Sistema de Autenticación Biométrica
+   - Implementación de reconocimiento facial y huella dactilar
+   - Desarrollo multiplataforma
+   - Integración con sistemas de seguridad SOC
    
-2. VulnScanner Pro
-   - Automated vulnerability assessment tool
-   - Python & Docker
-   - CI/CD security integration
+2. Plataforma de Gestión para Seguros de Automóviles
+   - Participé en desarrollo en Seguros Atlántida
+   - Comunicaciones socket seguras
+   - Desarrollo de interfaces administrativas
    
-3. Portfolio Terminal
-   - Interactive terminal-style portfolio
-   - React & Astro framework
-   - Creative UX design`
+3. Aplicación Móvil "La Hora Del Té"
+   - Sistemas de autenticación multifactor
+   - Gestión de sesiones de usuario
+   
+4. Análisis de Vulnerabilidades y SOC
+   - Identificación y corrección proactiva de vulnerabilidades
+   - Gestión de vulnerabilidades en aplicaciones móviles
+   - Análisis de tráfico con Wireshark
+   - Gestión de SIEM para correlación de eventos
+   - Procedimientos de respuesta a incidentes
+   
+5. Portfolio Terminal Interactivo
+   - Terminal-style portfolio con React & Astro
+   - Diseño UX creativo y responsive
+   - Optimizado para móviles`
     },
     experience: {
-      title: 'Experience',
-      content: `Professional Experience
+      title: 'Experiencia',
+      content: `Experiencia Profesional
       
-Senior Mobile Developer
-TechSecure Solutions (2022 - Present)
-• Led development of secure mobile banking app
-• Implemented security best practices
-• Mentored junior developers
+Desarrollo de app multiplataforma
+Beanario Software (2024 - 2025)
+• Implementación de autenticación biométrica
+• Desarrollo e integré sistemas de reconocimiento facial y huella dactilar
+• Monitoreo y logging de seguridad
+• Análisis de dispositivos seguros
 
-Cybersecurity Analyst
-CyberDefense Corp (2020 - 2022)
-• Conducted penetration testing
-• Performed security audits
-• Developed security protocols
+Participé en el desarrollo de plataforma de gestión para seguros de automóviles
+Seguros Atlántida (Mayo 2023 - Nov 2023)
+• Firma electrónica: Integré soluciones OneSpan para garantizar la autenticidad
+• Comunicaciones: Implementé conexiones socket seguras para transacciones en tiempo real
+• Desarrollo de interfaces administrativas: Creé paneles seguros con controles de acceso apropiados
 
-Mobile Developer
-AppInnovate (2018 - 2020)
-• Built React Native applications
-• Integrated security features
-• Collaborated with security teams`
+Aplicación móvil "La Hora Del Té"
+Otros (Sep 2023 - Ene 2024)
+• Sistemas de autenticación multifactor: Implementé validación OTP para reforzar la seguridad de acceso
+• Gestión de sesiones: Desarrollé mecanismos seguros de manejo de sesiones de usuario
+
+Experiencia Adicional - SOC Operations & Incident Response
+Google Cloud Platform
+• Análisis de tráfico con Wireshark, gestión de SIEM para correlación de eventos
+• Configuración de IDS/IPS, y procedimientos de respuesta a incidentes
+• Reconocimiento con Nmap, testing de aplicaciones web con Burp Suite
+• Administración de Proxmox y Windows Server, virtualización de entornos seguros
+• Configuración de VPN empresariales, y hardening de sistemas Linux múltiples distribuciones`
     },
     contact: {
-      title: 'Contact',
-      content: `Get In Touch
+      title: 'Contacto',
+      content: `¡Conectemos!
       
-Email: roberto.betancourth@example.com
+Email: robertobetancourth96@gmail.com
+Teléfono: +504 88421892
 LinkedIn: linkedin.com/in/roberto-betancourth
-GitHub: github.com/roberto-betancourth
+GitHub: github.com/Grosbin
+Website: robertobetancourth.azurewebsites.net
 
-Location: Remote / Available Worldwide
-Timezone: UTC-5
+Ubicación: Tegucigalpa, Honduras
+Timezone: UTC-6
 
-Open to:
-• Full-time opportunities
-• Consulting projects
-• Security audits
-• Mobile development contracts
+Objetivo Profesional:
+Consolidar mi carrera como SOC Analyst o CTIS, aplicando experiencia 
+técnica en desarrollo seguro y análisis de vulnerabilidades para 
+detección, análisis y respuesta a incidentes de seguridad en Security 
+Operations Centers.
 
-Preferred Technologies:
-React Native, Swift, Kotlin, Python, Node.js, Docker, AWS`
+Abierto a:
+• Oportunidades SOC Analyst / CTIS
+• Proyectos de Ciberseguridad
+• Desarrollo móvil con enfoque en seguridad
+• Consultoría en análisis de vulnerabilidades
+
+Tecnologías Principales:
+Nmap, Wireshark, Burp Suite, Kali Linux, SIEM, IDS/IPS, Python, 
+Java, JavaScript, React Native, Docker, Azure Cloud, Linux`
     }
   };
 
