@@ -1,4 +1,6 @@
 ---
+import '../styles/global.css';
+
 export interface Props {
 	title?: string;
 	description?: string;
@@ -45,7 +47,6 @@ const {
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		
 		<!-- Global styles -->
-		<link rel="stylesheet" href="/src/styles/global.css" />
 		
 		<style>
 			* {
@@ -69,7 +70,7 @@ const {
 		
 		<!-- Theme initialization script -->
 		<script>
-			import { initTheme } from '/src/utils/theme.js';
+			import { initTheme } from '../utils/theme.js';
 			
 			// Initialize theme immediately to prevent flash
 			initTheme();
