@@ -30,7 +30,7 @@ export default function BootScreen({ onBootComplete }) {
   useEffect(() => {
     const cursorInterval = setInterval(() => {
       setShowCursor(prev => !prev);
-    }, 400);
+    }, 300);
 
     return () => clearInterval(cursorInterval);
   }, []);
@@ -38,10 +38,10 @@ export default function BootScreen({ onBootComplete }) {
   useEffect(() => {
     if (currentStep >= bootMessages.length) {
       setBootComplete(true);
-      // Auto-enter after 0.5 second when boot is complete
+      // Auto-enter after 0.2 second when boot is complete
       setTimeout(() => {
         onBootComplete();
-      }, 500);
+      }, 200);
       return;
     }
 
@@ -54,21 +54,21 @@ export default function BootScreen({ onBootComplete }) {
         setCurrentMessage(message.slice(0, charIndex));
         charIndex++;
         
-        // Variable speed typing - faster
-        const delay = message === '' ? 50 : 
-                     message.startsWith('[OK]') ? 25 :
-                     message.includes('...') ? 40 : 15;
+        // Variable speed typing - much faster
+        const delay = message === '' ? 20 : 
+                     message.startsWith('[OK]') ? 8 :
+                     message.includes('...') ? 12 : 5;
         
         setTimeout(typeMessage, delay);
       } else {
-        // Message complete, move to next after delay - faster
+        // Message complete, move to next after delay - much faster
         setTimeout(() => {
           setCurrentStep(prev => prev + 1);
-        }, message.startsWith('[OK]') ? 100 : 250);
+        }, message.startsWith('[OK]') ? 30 : 80);
       }
     };
 
-    const initialDelay = currentStep === 0 ? 500 : 50;
+    const initialDelay = currentStep === 0 ? 200 : 20;
     setTimeout(typeMessage, initialDelay);
   }, [currentStep]);
 
@@ -80,7 +80,7 @@ export default function BootScreen({ onBootComplete }) {
         {/* Header */}
         <div className="flex-shrink-0 border-b border-gray-400 p-4">
           <div className="text-center">
-            <div className="text-white text-lg font-bold boot-text">ROBERTO PORTFOLIO OS</div>
+            <div className="text-white text-lg font-bold">ROBERTO PORTFOLIO OS</div>
             <div className="text-gray-300 text-sm">Terminal Mode Activated</div>
           </div>
         </div>
